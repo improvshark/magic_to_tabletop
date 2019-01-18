@@ -1,5 +1,6 @@
 const CARD_SIZE = 'small'
 const API_DELAY = 50
+const DEBUG = document.location.host.indexOf('github') == -1
 
 function delay(time) {
   return new Promise(resolve =>{
@@ -128,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 1 Back
 1 Test`
 
-  document.getElementById('text').value = '4 Rafiq of the Many'
+  if(DEBUG)
+    document.getElementById('text').value = '4 Rafiq of the Many'
   document.getElementById("submit").addEventListener("click", main)
 });
