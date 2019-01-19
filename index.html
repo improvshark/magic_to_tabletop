@@ -19,7 +19,20 @@
     <form class="clearfix">
       <fieldset>
         <textarea id="text" class="" name="text"></textarea>
-        <button id="submit" type="button" name="button">create</button>
+        <div class="row">
+          <button id="submit" class="column" type="button" name="button">create</button>
+          <div class="column float-right">
+            <select id="size" class="" name="size">
+              <option value="small">Small</option>
+              <option value="normal" selected>Normal</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <div class="column float-right">
+            <input id=back type="checkbox">
+            <label class="label-inline" for="back">Include Back</label>
+          </div>
+        </div>
       </fieldset>
     </form>
     <div id="container">

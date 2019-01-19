@@ -1,4 +1,3 @@
-const CARD_SIZE = 'small'
 const API_DELAY = 50
 const DEBUG = document.location.host.indexOf('github') == -1
 
@@ -9,10 +8,10 @@ class Deck {
       throw 'width or height too large'
 
     this.data = data
-    this.rows = rows;
-    this.columns = columns;
+    this.rows = rows
+    this.columns = columns
     this.back = back
-    this.cardSize = cardSize
+    this.cardSize = cardSize || 'small'
 
     this.fetchingData = Promise.resolve()
     this.canvas = document.createElement("canvas");
@@ -72,7 +71,7 @@ class Deck {
 
   loadBack(){
     return Deck.delay(API_DELAY * this.data.length)
-    .then(() => Deck.loadImage(this.backData.image_uris[CARD_SIZE]))
+    .then(() => Deck.loadImage(this.backData.image_uris[this.cardSize]))
     .then(img => this.backData.img = img)
   }
 
@@ -82,7 +81,7 @@ class Deck {
     this.data.forEach( (card, index) => {
       result = result
       .then(()=> Deck.delay(API_DELAY * index))
-      .then(()=>Deck.loadImage(card.image_uris[CARD_SIZE]))
+      .then(()=>Deck.loadImage(card.image_uris[this.cardSize]))
       .then(img => card.img = img)
     })
     if(this.back)
@@ -99,6 +98,7 @@ class Deck {
     if(this.back)
       n++
     this.rows = Math.floor(Math.sqrt(n))
+    this.rows = Math.min(this.rows, 10) // set a max of 10 rows
     while( n % this.rows != 0){
       this.rows--
       console.log(n,  n % this.rows != 0)
@@ -152,10 +152,12 @@ class Deck {
 }
 
 function main() {
+  let includeBack = false
   let text = document.getElementById('text').value
   let container = document.getElementById('container')
   Deck.create(text,{
-    back: false
+    back: document.getElementById('back').checked,
+    cardSize: document.getElementById('size').value
   }).then( deck => {
     container.appendChild(deck.canvas)
     deck.render()
@@ -174,6 +176,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 1 Test`
 
   if(DEBUG)
-    document.getElementById('text').value = '4 Rafiq of the Many'
+    document.getElementById('text').value = '25 Rafiq of the Many'
   document.getElementById("submit").addEventListener("click", main)
 });
