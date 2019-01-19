@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Magic > TableTop </title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="script.js" charset="utf-8"></script>
-    <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
-    <link rel="stylesheet" href="https://unpkg.com/skeleton-css@2.0.4/css/skeleton.css">
 
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="header">
-      <textarea id='text' class="u-full-width" name="name"></textarea>
-      <button id='submit' class="u-pull-right u-cf" type="button" name="button">Submit</button>
-    </div>
+<head>
+  <meta charset="utf-8">
+  <title>Magic to TableTop </title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,700,700i">
+  <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+  <link rel="stylesheet" href="https://unpkg.com/milligram@1.3.0/dist/milligram.min.css">
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="script.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <div class="container">
+    <form class="clearfix">
+      <fieldset>
+        <textarea id="text" class="" name="text"></textarea>
+        <button id="submit" type="button" name="button">create</button>
+      </fieldset>
+    </form>
     <div id="container">
-
     </div>
-  </body>
+  </div>
+</body>
+
 </html>

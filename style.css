@@ -1,11 +1,16 @@
-.header {
-  padding: 10px;
-}
-
-#container {
-  padding: 10px;
-}
-
 canvas {
   width: 100%;
+}
+
+body {
+  background-color: #262626;
+  padding-top: 20px;
+}
+
+button,
+textarea,
+input,
+select,
+label{
+  color: #fff;
 }

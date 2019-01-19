@@ -2,25 +2,38 @@ const CARD_SIZE = 'small'
 const API_DELAY = 50
 const DEBUG = document.location.host.indexOf('github') == -1
 
-function delay(time) {
-  return new Promise(resolve =>{
-    setTimeout(()=> resolve(),time )
-  })
-}
-
-
-
 
 class Deck {
-  constructor(data, columns = 10, rows = 7) {
+  constructor({data, columns, rows, back, cardSize}) {
     if(columns > 10 || rows > 7)
       throw 'width or height too large'
+
     this.data = data
     this.rows = rows;
     this.columns = columns;
+    this.back = back
+    this.cardSize = cardSize
+
     this.fetchingData = Promise.resolve()
     this.canvas = document.createElement("canvas");
     this.context = this.canvas.getContext('2d')
+    this.backData = {
+      qty: 1,
+      image_uris: {
+        art_crop:"",
+        border_crop:"",
+        large:'https://cdn1.mtggoldfish.com/images/gf/back.jpg',
+        normal:'https://cdn1.mtggoldfish.com/images/gf/back.jpg',
+        png:'',
+        small:'https://cdn1.mtggoldfish.com/images/gf/back.jpg',
+      }
+    }
+  }
+
+  static delay(time) {
+    return new Promise(resolve =>{
+      setTimeout(()=> resolve(),time )
+    })
   }
 
   static parseText(text){
@@ -29,7 +42,7 @@ class Deck {
     let m
     while ( m = reg.exec(text)) {
       cards.push({
-        qty: m[1],
+        qty: Number(m[1]),
         name: m[2],
       })
     }
@@ -57,22 +70,55 @@ class Deck {
     });
   };
 
+  loadBack(){
+    return Deck.delay(API_DELAY * this.data.length)
+    .then(() => Deck.loadImage(this.backData.image_uris[CARD_SIZE]))
+    .then(img => this.backData.img = img)
+  }
+
   loadImagesNice() {
     let result = Promise.resolve()
     let modifiedCardData = []
     this.data.forEach( (card, index) => {
       result = result
-      .then(()=> delay(API_DELAY * index))
+      .then(()=> Deck.delay(API_DELAY * index))
       .then(()=>Deck.loadImage(card.image_uris[CARD_SIZE]))
       .then(img => card.img = img)
     })
+    if(this.back)
+      result = result.then(()=>this.loadBack())
    return result.then(()=> this)
+  }
+
+  length(){
+    return this.data.reduce((prev, cur) => prev + cur.qty, 0)
+  }
+
+  autoSize(){
+    let n = this.length()
+    if(this.back)
+      n++
+    this.rows = Math.floor(Math.sqrt(n))
+    while( n % this.rows != 0){
+      this.rows--
+      console.log(n,  n % this.rows != 0)
+    }
+    this.columns = n / this.rows
   }
 
   render(){
     let cards = this.data.slice().reverse()
     let cardWidth = cards[0].img.naturalWidth
     let cardHeight = cards[0].img.naturalHeight
+
+
+    if(!this.rows || !this.columns)
+      this.autoSize()
+
+    if(this.back)
+      cards.unshift(this.backData)
+
+    console.log(this.columns, this.rows)
     this.canvas.width  = cardWidth*this.columns
     this.canvas.height = cardHeight*this.rows
 
@@ -92,20 +138,15 @@ class Deck {
           this.context.drawImage(current.img, cardWidth*j, cardHeight*i)
       }
     }
-    // context.drawImage('https://cdn1.mtggoldfish.com/images/gf/back.jpg', cardWidth*(columns-1), cardHeight*(rows-1))
   }
 
-  static create(unparsedText, width, height){
-    let deck = Deck.parseText(unparsedText)
-    return Deck.fetchCardData(deck).then(cardData => {
-      // add our new data to the deck
-      deck.forEach((card, index) => Object.assign(card, cardData[index]))
-      deck = new Deck(deck, width, height)
-
+  static create(unparsedText, options = {}){
+    let parsedText = Deck.parseText(unparsedText)
+    let data
+    return Deck.fetchCardData(parsedText).then(cardData => {
+      let data = cardData.map((card,index)=>Object.assign(card,parsedText[index]))
+      let deck = new Deck(Object.assign({data}, options))
       return deck.loadImagesNice(cardData)
-      .catch(error => alert(error, 'Error'));
-
-      return deck
     })
   }
 }
@@ -113,10 +154,13 @@ class Deck {
 function main() {
   let text = document.getElementById('text').value
   let container = document.getElementById('container')
-  Deck.create(text).then( deck => {
+  Deck.create(text,{
+    back: false
+  }).then( deck => {
     container.appendChild(deck.canvas)
     deck.render()
   })
+  .catch(error => alert(error, 'Error'))
 }
 
 
