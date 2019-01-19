@@ -98,7 +98,6 @@ class Deck {
     if(this.back)
       n++
     this.rows = Math.floor(Math.sqrt(n))
-    this.rows = Math.min(this.rows, 10) // set a max of 10 rows
     while( n % this.rows != 0){
       this.rows--
       console.log(n,  n % this.rows != 0)
@@ -135,7 +134,7 @@ class Deck {
         }
         if(!current.img)
           throw 'we are missing an image? what?'
-          this.context.drawImage(current.img, cardWidth*j, cardHeight*i)
+          this.context.drawImage(current.img, cardWidth*j, cardHeight*i, cardWidth, cardHeight)
       }
     }
   }
