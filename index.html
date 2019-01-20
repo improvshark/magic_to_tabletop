@@ -20,18 +20,29 @@
       <fieldset>
         <textarea id="text" class="" name="text"></textarea>
         <div class="row">
-          <button id="submit" class="column" type="button" name="button">create</button>
-          <div class="column float-right">
+          <div class="column">
+            <label class="label-inline" for="size">Size</label>
             <select id="size" class="" name="size">
               <option value="small">Small</option>
               <option value="normal" selected>Normal</option>
               <option value="large">Large</option>
             </select>
           </div>
-          <div class="column float-right">
-            <input id=back type="checkbox">
-            <label class="label-inline" for="back">Include Back</label>
+          <div class="column">
+            <label for="columns">Columns</label>
+            <input id="columns" type="number" value="">
           </div>
+          <div class="column">
+            <label  for="rows">rows</label>
+            <input id="rows" type="number" value="" name="rows">
+          </div>
+          <div class="column float-right">
+            <label  for="back">Include Back</label>
+            <input id=back type="checkbox">
+          </div>
+        </div>
+        <div class="row">
+          <button id="submit" class="column" type="button" name="button">create</button>
         </div>
       </fieldset>
     </form>

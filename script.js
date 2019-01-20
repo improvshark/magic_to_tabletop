@@ -6,12 +6,20 @@ class Deck {
   constructor({data, columns, rows, back, cardSize}) {
     if(columns > 10 || rows > 7)
       throw 'width or height too large'
-
     this.data = data
+    let length = this.length()
+    if( columns && !rows)
+      rows = Math.ceil( length / columns)
+    else if( !columns && rows)
+      columns = Math.ceil( length / rows)
+
+
+
     this.rows = rows
     this.columns = columns
     this.back = back
     this.cardSize = cardSize || 'small'
+    console.log('size:', this.rows, this.column, length)
 
     this.fetchingData = Promise.resolve()
     this.canvas = document.createElement("canvas");
@@ -156,7 +164,9 @@ function main() {
   let container = document.getElementById('container')
   Deck.create(text,{
     back: document.getElementById('back').checked,
-    cardSize: document.getElementById('size').value
+    cardSize: document.getElementById('size').value,
+    rows: Number(document.getElementById('rows').value),
+    columns: Number(document.getElementById('columns').value),
   }).then( deck => {
     container.appendChild(deck.canvas)
     deck.render()
@@ -174,7 +184,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 1 Back
 1 Test`
 
-  if(DEBUG)
+  if(DEBUG){
     document.getElementById('text').value = '25 Rafiq of the Many'
+    document.getElementById('size').value = 'small'
+    document.getElementById('back').checked = true
+  }
   document.getElementById("submit").addEventListener("click", main)
 });
