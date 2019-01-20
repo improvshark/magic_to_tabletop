@@ -4,8 +4,6 @@ const DEBUG = document.location.host.indexOf('github') == -1
 
 class Deck {
   constructor({data, columns, rows, back, cardSize}) {
-    if(columns > 10 || rows > 7)
-      throw 'width or height too large'
     this.data = data
     let length = this.length()
     if( columns && !rows)
@@ -19,7 +17,6 @@ class Deck {
     this.columns = columns
     this.back = back
     this.cardSize = cardSize || 'small'
-    console.log('size:', this.rows, this.column, length)
 
     this.fetchingData = Promise.resolve()
     this.canvas = document.createElement("canvas");
@@ -67,13 +64,33 @@ class Deck {
     })
   }
 
+  static cacheImg(url, img) {
+    let imgReader = document.createElement("canvas");
+    imgReader.width = img.naturalWidth
+    imgReader.height = img.naturalHeight
+    imgReader.getContext('2d').drawImage(img,0,0)
+    lscache.set(url,imgReader.toDataURL(), 60 * 24 * 7)
+  }
+
   static loadImage(url) {
-    console.log('loading', url)
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => resolve(img);
+      let cacheImg = lscache.get(url)
+
+      img.onload = () => {
+        if(!cacheImg)
+          Deck.cacheImg(url, img)
+        resolve(img)
+      }
       img.onerror = () => reject(new Error(`load ${url} fail`));
-      img.src = url;
+
+      if(cacheImg){
+        console.log('loading from cache', url)
+        img.src = cacheImg
+      } else {
+        console.log('loading from scryfall', url)
+        img.src = url;
+      }
     });
   };
 
@@ -108,7 +125,6 @@ class Deck {
     this.rows = Math.floor(Math.sqrt(n))
     while( n % this.rows != 0){
       this.rows--
-      console.log(n,  n % this.rows != 0)
     }
     this.columns = n / this.rows
   }
@@ -125,7 +141,6 @@ class Deck {
     if(this.back)
       cards.unshift(this.backData)
 
-    console.log(this.columns, this.rows)
     this.canvas.width  = cardWidth*this.columns
     this.canvas.height = cardHeight*this.rows
 
