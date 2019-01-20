@@ -26,10 +26,10 @@ class Deck {
       image_uris: {
         art_crop:"",
         border_crop:"",
-        large:'https://cdn1.mtggoldfish.com/images/gf/back.jpg',
-        normal:'https://cdn1.mtggoldfish.com/images/gf/back.jpg',
+        large: 'img/back.large.jpg',
+        normal: 'img/back.normal.jpg',
         png:'',
-        small:'https://cdn1.mtggoldfish.com/images/gf/back.jpg',
+        small: 'img/back.small.jpg',
       }
     }
   }
@@ -75,6 +75,7 @@ class Deck {
   static loadImage(url) {
     return new Promise((resolve, reject) => {
       const img = new Image();
+       img.crossOrigin="anonymous"
       let cacheImg = lscache.get(url)
 
       img.onload = () => {
