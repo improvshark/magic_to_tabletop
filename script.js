@@ -121,8 +121,6 @@ class Deck {
 
   autoSize(){
     let n = this.length()
-    if(this.back)
-      n++
     this.rows = Math.floor(Math.sqrt(n))
     while( n % this.rows != 0){
       this.rows--
@@ -138,9 +136,6 @@ class Deck {
 
     if(!this.rows || !this.columns)
       this.autoSize()
-
-    if(this.back)
-      cards.unshift(this.backData)
 
     this.canvas.width  = cardWidth*this.columns
     this.canvas.height = cardHeight*this.rows
@@ -161,6 +156,8 @@ class Deck {
           this.context.drawImage(current.img, cardWidth*j, cardHeight*i, cardWidth, cardHeight)
       }
     }
+    if(this.back)
+      this.context.drawImage(this.backData.img, cardWidth*(this.columns-1), cardHeight*(this.rows-1))
   }
 
   static create(unparsedText, options = {}){
@@ -201,7 +198,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 1 Test`
 
   if(DEBUG){
-    document.getElementById('text').value = '25 Rafiq of the Many'
+    document.getElementById('text').value = '70 Rafiq of the Many'
     document.getElementById('size').value = 'small'
     document.getElementById('back').checked = true
   }
