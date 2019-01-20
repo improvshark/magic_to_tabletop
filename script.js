@@ -69,14 +69,14 @@ class Deck {
     imgReader.width = img.naturalWidth
     imgReader.height = img.naturalHeight
     imgReader.getContext('2d').drawImage(img,0,0)
-    lscache.set(url,imgReader.toDataURL(), 60 * 24 * 7)
+    lscache.set(url.split('?')[0],imgReader.toDataURL(), 60 * 24 * 7)
   }
 
   static loadImage(url) {
     return new Promise((resolve, reject) => {
       const img = new Image();
        img.crossOrigin="anonymous"
-      let cacheImg = lscache.get(url)
+      let cacheImg = lscache.get(url.split('?')[0])
 
       img.onload = () => {
         if(!cacheImg)
