@@ -19,3 +19,7 @@ label{
 select {
   background-color: #404040;
 }
+
+textarea {
+  min-height: 140px;
+}
