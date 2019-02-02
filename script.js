@@ -165,6 +165,13 @@ class Deck {
     let data
     return Deck.fetchCardData(parsedText).then(cardData => {
       let data = cardData.map((card,index)=>Object.assign(card,parsedText[index]))
+      //make sure we are not missing images
+      data = data.filter((card)=>{
+        if (card.image_uris && card.image_uris[options.cardSize || 'small'])
+          return true
+        alert(card.name + ' is missing images', 'skipping')
+        return false
+      })
       let deck = new Deck(Object.assign({data}, options))
       return deck.loadImagesNice(cardData)
     })
