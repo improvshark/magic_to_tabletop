@@ -1,4 +1,4 @@
-import { scryfall } from '/app/SkryFall.mjs'
+import { scryfall } from './SkryFall.mjs'
 
 const API_DELAY = 50
 

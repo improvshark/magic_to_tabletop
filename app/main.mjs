@@ -1,4 +1,4 @@
-import Deck from '/app/Deck.mjs'
+import Deck from './Deck.mjs'
 
 const DEBUG = document.location.host.indexOf('github') == -1
 
